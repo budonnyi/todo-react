@@ -3,49 +3,53 @@ import './todo-list-item.css'
 
 export default class TodoListItem extends Component {
 
-    state = {
-        done: false,
-        important: false
-    }
+    // state = {
+    //     done: false,
+    //     important: false
+    // }
 
-    onLabelClick = () => {
-        this.setState(({done}) => {
-            return {
-                done: !done
-            }
-        })
-    }
-
-    onMarkImportantClick = () => {
-        this.setState((state) => {
-            return {
-                important: !state.important
-            }
-        })
-    }
+    // onLabelClick = () => {
+    //     this.setState(({done}) => {
+    //         return {
+    //             done: !done
+    //         }
+    //     })
+    // }
+    //
+    // onMarkImportantClick = () => {
+    //     this.setState((state) => {
+    //         return {
+    //             important: !state.important
+    //         }
+    //     })
+    // }
 
     render() {
 
-        const { label } = this.props
+        const {
+            label, onDeleted,
+            onToggleImportant,
+            onToggleDone, important, done
+        } = this.props
 
-        const { done, important } = this.state
+        // const {done, important} = this.state
 
         let classNames = 'todo-list-item'
 
-        if( done ) {
+        if (done) {
             classNames += ' done'
         }
 
-        if( important ) {
+        if (important) {
             classNames += ' important'
         }
 
         return (
-            <span className={ classNames }>
+            <span className={classNames}>
 
             <span
                 className='todo-list-item-label'
-                onClick={ this.onLabelClick }
+                onClick={onToggleDone}
             >
                 {label}
             </span>
@@ -53,17 +57,19 @@ export default class TodoListItem extends Component {
         <button
             type='button'
             className='btn btn-outline-success btn-sm float-right'
-            onClick={ this.onMarkImportantClick }
+            onClick={onToggleImportant}
         >
+
         <i className='fa fa-exclamation'></i>
 
         </button>
 
         <button
             type="button"
-            className='btn btn-outline-secondary btn-sm float-right'
-            onClick={this.props.onDeleted}
+            className='btn btn-outline-danger btn-sm float-right'
+            onClick={onDeleted}
         >
+
         <i className='fa fa-trash-o'></i>
 
         </button>
