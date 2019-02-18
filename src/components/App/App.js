@@ -14,21 +14,58 @@ export default class App extends Component {
     maxId = 100;
 
     state = {
-        todoData: [
-            this.createTodoItem('Drink Coffee'),
-            this.createTodoItem('Do the Aliks site'),
-            this.createTodoItem('Renkas birthday'),
-        ],
+
+        // todoData: [
+        //     this.createTodoItem('Drink Coffee'),
+        //     this.createTodoItem('Done ToDo application'),
+        //     this.createTodoItem('Make five React apps'),
+        //     this.createTodoItem('Learn Node JS'),
+        //     this.createTodoItem('Done PHP REST api')
+        // ],
+
+        todoData: [],
         term: '',
         filter: 'all' //active, all, done
     }
 
+
+    componentDidMount() {
+        if (this.state.todoData !== []) {
+            this.loadTodos();
+            console.log('loaded')
+        }
+    }
+
+
+    loadTodos = async () => {
+
+        const res = await fetch('http://backend/todo')
+        const body = await res.json()
+
+        console.log('body = ', body)
+
+        this.setState(({todoData}) => {
+
+            const newArray = [
+                ...todoData,
+                ...body
+            ]
+
+            return {
+                todoData: newArray
+            }
+
+        })
+
+        return true
+    }
+
     createTodoItem(label) {
         return {
+            id: this.maxId++,
             label: label,
             important: false,
-            done: false,
-            id: this.maxId++
+            done: false
         }
     }
 
@@ -71,8 +108,10 @@ export default class App extends Component {
         const idx = arr.findIndex((el) => el.id === id)
 
         const oldItem = arr[idx]
-        const newItem = { ...oldItem,
-            [propName]: !oldItem[propName] }
+        const newItem = {
+            ...oldItem,
+            [propName]: !oldItem[propName]
+        }
 
         return [
             ...arr.slice(0, idx),
@@ -99,19 +138,19 @@ export default class App extends Component {
 
     search(items, term) {
 
-        if(term.length === '') {
+        if (term.length === '') {
             return items;
         }
 
         return items.filter((item) => {
             return item.label
                 .toLowerCase()
-                .indexOf( term.toLowerCase()) > -1
+                .indexOf(term.toLowerCase()) > -1
         })
     }
 
     onSearchChange = (term) => {
-        this.setState({ term })
+        this.setState({term})
     }
 
     filter(items, filter) {
@@ -123,20 +162,21 @@ export default class App extends Component {
                 return items.filter((item) => !item.done);
             case 'done':
                 return items.filter((item) => item.done);
-            default: return items;
+            default:
+                return items;
         }
     }
 
     onFilterChange = (filter) => {
-        this.setState({ filter })
+        this.setState({filter})
     }
 
     render() {
 
-        const { todoData, term, filter } = this.state
+        const {todoData, term, filter} = this.state
 
         const visibleItems = this.filter(
-            this.search( todoData, term ), filter)
+            this.search(todoData, term), filter)
 
         const doneCount = this.state.todoData
             .filter((el) => el.done).length
@@ -150,11 +190,11 @@ export default class App extends Component {
 
                 <div className='top-panel d-flex'>
                     <SearchPanel
-                        onSearchChange = {this.onSearchChange}
+                        onSearchChange={this.onSearchChange}
                     />
                     <ItemStatusFilter
-                        filter = {filter}
-                        onFilterChange = {this.onFilterChange}
+                        filter={filter}
+                        onFilterChange={this.onFilterChange}
                     />
                 </div>
 
