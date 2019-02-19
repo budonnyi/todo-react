@@ -23,14 +23,16 @@ export default class App extends Component {
         //     this.createTodoItem('Done PHP REST api')
         // ],
 
-        todoData: [],
+        todoData: [{
+
+        }],
         term: '',
         filter: 'all' //active, all, done
     }
 
 
     componentDidMount() {
-        if (this.state.todoData !== []) {
+        if (this.state.todoData) {
             this.loadTodos();
             console.log('loaded')
         }
@@ -70,6 +72,32 @@ export default class App extends Component {
     }
 
     deleteItem = (id) => {
+
+
+
+        const requestUrl = 'http://backend/todo' + `?id=${id}`;
+        const {todoData} = this.state;
+
+        fetch(requestUrl, {method: 'DELETE'})
+            .then(res => {
+                const {status} = res;
+
+                if (status < 200 || status > 299) {
+                    throw new Error(`Ошибка при удалении! Код: ${status}`);
+                }
+
+                const cleanTodoData = todoData.filter(todo => todo.id !== id);
+                this.setState({todoData: cleanTodoData});
+
+                alert(`Задача с id: ${id} удалена!`);
+            })
+            .catch(error => {
+                console.log('catch error');
+                console.error(error);
+            });
+
+
+
         this.setState(({todoData}) => {
 
             const idx = todoData.findIndex((el) => el.id === id)
@@ -102,6 +130,8 @@ export default class App extends Component {
 
         })
     }
+
+
 
     toggleProperty(arr, id, propName) {
 

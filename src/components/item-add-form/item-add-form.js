@@ -3,7 +3,15 @@ import './item-add-form.css'
 
 
 export default class ItemAddForm extends Component {
-
+    // constructor(props) {
+    //     super(props);
+    //
+    //     this.state = {
+    //         label: '',
+    //         messages: '',
+    //         error: '',
+    //     }
+    // }
     state = {
         label: ''
     }
@@ -14,8 +22,58 @@ export default class ItemAddForm extends Component {
         })
     }
 
-    onSubmit = (e) => {
-        e.preventDefault()
+    // onSubmit = (e) => {
+    //     e.preventDefault()
+    //     this.props.onAddItem(this.state.label)
+    //     this.setState({
+    //         label: ''
+    //     })
+    // }
+
+    addNewsCallback = (newNews) => {
+        const {todoData} = this.state;
+        this.setState({todoData: [...todoData, newNews]});
+    }
+
+    onSubmit = (event) => {
+        event.preventDefault();
+
+        const { label } = this.state;
+        console.log('props = ', this.props)
+        const { addNewsCallback } = this.props;
+
+        if ([label].some(el => !el.length)) {
+            return this.setState({error: 'Заполните полe!', messages: ''});
+        }
+
+        const requestUrl = 'http://backend/todo' + `?label=${label}`;
+
+        fetch(requestUrl, {method: 'POST'})
+            .then(res => {
+                const { status } = res;
+
+                if (status < 200 || status > 299) {
+                    throw new Error(`Ошибка при добавлении новости. Код ${status}`);
+                }
+
+                return res.json();
+            })
+            .then(addedNews => {
+                addNewsCallback(addedNews);
+                this.setState({
+                    label: '',
+                    messages: 'Новость успешно добавлена!',
+                    error: '',
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                this.setState({error: error.message, messages: ''});
+            });
+
+
+    // onSubmit = (e) => {
+        // e.preventDefault()
         this.props.onAddItem(this.state.label)
         this.setState({
             label: ''
