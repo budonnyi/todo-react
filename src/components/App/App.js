@@ -15,9 +15,7 @@ export default class App extends Component {
 
     state = {
 
-        todoData: [{
-
-        }],
+        todoData: [{}],
 
         term: '',
 
@@ -28,7 +26,10 @@ export default class App extends Component {
     componentDidMount() {
         if (this.state.todoData) {
             this.loadTodos();
-            console.log('loaded')
+        }
+
+        if (this.state.todoData == []) {
+            this.loadTodos();
         }
     }
 
@@ -89,8 +90,6 @@ export default class App extends Component {
                 console.log('catch error');
                 console.error(error);
             });
-
-
 
         this.setState(({todoData}) => {
 
