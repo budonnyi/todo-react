@@ -46,7 +46,7 @@ export default class ItemAddForm extends Component {
             return this.setState({error: 'Заполните полe!', messages: ''});
         }
 
-        const requestUrl = 'http://backend/todo' + `?label=${label}`;
+        const requestUrl = 'http://backend.budennyi.com/todo' + `?label=${label}`;
 
         fetch(requestUrl, {method: 'POST'})
             .then(res => {

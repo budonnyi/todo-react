@@ -15,18 +15,12 @@ export default class App extends Component {
 
     state = {
 
-        // todoData: [
-        //     this.createTodoItem('Drink Coffee'),
-        //     this.createTodoItem('Done ToDo application'),
-        //     this.createTodoItem('Make five React apps'),
-        //     this.createTodoItem('Learn Node JS'),
-        //     this.createTodoItem('Done PHP REST api')
-        // ],
-
         todoData: [{
 
         }],
+
         term: '',
+
         filter: 'all' //active, all, done
     }
 
@@ -41,7 +35,7 @@ export default class App extends Component {
 
     loadTodos = async () => {
 
-        const res = await fetch('http://backend/todo')
+        const res = await fetch('http://backend.budennyi.com/todo')
         const body = await res.json()
 
         console.log('body = ', body)
@@ -62,6 +56,7 @@ export default class App extends Component {
         return true
     }
 
+
     createTodoItem(label) {
         return {
             id: this.maxId++,
@@ -71,11 +66,10 @@ export default class App extends Component {
         }
     }
 
+
     deleteItem = (id) => {
 
-
-
-        const requestUrl = 'http://backend/todo' + `?id=${id}`;
+        const requestUrl = 'http://backend.budennyi.com/todo' + `?id=${id}`;
         const {todoData} = this.state;
 
         fetch(requestUrl, {method: 'DELETE'})
@@ -89,7 +83,7 @@ export default class App extends Component {
                 const cleanTodoData = todoData.filter(todo => todo.id !== id);
                 this.setState({todoData: cleanTodoData});
 
-                alert(`Задача с id: ${id} удалена!`);
+                // alert(`Задача с id: ${id} удалена!`);
             })
             .catch(error => {
                 console.log('catch error');
@@ -166,9 +160,10 @@ export default class App extends Component {
         })
     }
 
+
     search(items, term) {
 
-        if (term.length === '') {
+        if (term.length == '') {
             return items;
         }
 
@@ -179,9 +174,11 @@ export default class App extends Component {
         })
     }
 
+
     onSearchChange = (term) => {
         this.setState({term})
     }
+
 
     filter(items, filter) {
 
@@ -196,6 +193,7 @@ export default class App extends Component {
                 return items;
         }
     }
+
 
     onFilterChange = (filter) => {
         this.setState({filter})
